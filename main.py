@@ -244,10 +244,10 @@ def run_comparison(tasks_input, m=2, time=20, title="Simulação"):
 
 
 if __name__ == "__main__":
-    # Exemplo 1: Slide (Sucesso em ambos)
-    tasks_slide = [Task(1, 2, 4), Task(2, 3, 6), Task(3, 6, 20)]
+    # Exemplo 1: Sucesso em ambos os algoritmos
+    tasks_success = [Task(1, 2, 4), Task(2, 3, 6), Task(3, 6, 20)]
     run_comparison(
-        tasks_slide, m=2, time=20, title="Cenário 1: Carga Baixa (Sucesso em RM e EDF)"
+        tasks_success, m=2, time=20, title="Cenário 1: Carga Baixa (Sucesso em RM e EDF)"
     )
 
     # Exemplo 2: RM Falha, EDF Sucesso
@@ -277,4 +277,36 @@ if __name__ == "__main__":
         m=2,
         time=20,
         title="Cenário 3: Carga Máxima 100% (RM Falha vs EDF Sucesso)",
+    )
+
+    # Cenário de Falha de Particionamento (Dhall's Effect)
+    # M = 2, mas as tarefas são "grandes" demais para compartilhar um núcleo.
+    tasks_not_optimal = [
+        Task(1, 3, 5), # U = 0.6
+        Task(2, 3, 5), # U = 0.6
+        Task(3, 3, 5), # U = 0.6
+    ]
+
+    run_comparison(
+        tasks_not_optimal,
+        m=2,
+        time=100,
+        title="Cenário 4: Não-otimalidade: Falha por Fragmentação"
+    )
+
+    # Exemplo 5: Carga Distribuída em 3 Processadores
+    tasks_3p = [
+        Task(1, 1, 4),   # U = 0.25 (P0)
+        Task(2, 2, 6),   # U = 0.33 (P0) -> Soma P0: 0.58
+        Task(3, 3, 8),   # U = 0.37 (P1)
+        Task(4, 2, 10),  # U = 0.20 (P1) -> Soma P1: 0.57
+        Task(5, 5, 12),  # U = 0.41 (P2)
+        Task(6, 4, 15),  # U = 0.26 (P2) -> Soma P2: 0.67
+    ]
+
+    run_comparison(
+        tasks_3p, 
+        m=3, 
+        time=30, 
+        title="Cenário 5: 3 Processadores (Carga Distribuída)"
     )
